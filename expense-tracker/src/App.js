@@ -1,11 +1,14 @@
-
-import Sign from './pages/Sign/Sign';
+import {  Routes, Route } from 'react-router-dom';
+import Auth from "./pages/Auth/Auth";
+import Expense from "./pages/Expense/Expense";
 
 function App() {
+
   return (
-    <div>
-      <Sign />
-    </div>
+    <Routes>
+    <Route path='/auth' element={<Auth/>} />
+    <Route path='/expenses' element={<Expense/>} />
+  </Routes>
   );
 }
 
