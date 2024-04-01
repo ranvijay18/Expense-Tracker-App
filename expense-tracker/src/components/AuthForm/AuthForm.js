@@ -92,7 +92,7 @@ const AuthForm = () => {
         </div>
         <div className='d-flex justify-content-center align-items-center'>
         
-        <div className='container card m-5' style={{ width: "30rem", marginLeft:'1000px' }}>
+        <div className='container card m-5' style={{ width: "30rem"}}>
         <h1 className='text-center m-3'>{isLogin ? 'Log In' : 'Sign Up'}</h1>
         <Form className='m-3' onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
