@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -14,6 +14,11 @@ const AuthForm = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
+
+
+    const switchAuthModeHandler = () => {
+      setIsLogin((prevState) => !prevState);
+    };
 
   
     const handleSubmit = (e) => {
@@ -94,7 +99,7 @@ const AuthForm = () => {
         
         <div className='container card m-5' style={{ width: "30rem"}}>
         <h1 className='text-center m-3'>{isLogin ? 'Log In' : 'Sign Up'}</h1>
-        <Form className='m-3' onSubmit={handleSubmit}>
+        <Form className='m-3'>
       <Form.Group className="mb-3">
         <Form.Label>Email address</Form.Label>
         <Form.Control type="email" placeholder="Enter email" ref={emailRef}/>
@@ -110,11 +115,16 @@ const AuthForm = () => {
         <Form.Control type="password" placeholder="Confirm Password" ref={confirmPasswordRef}/>
       </Form.Group> : ''}
 
-      
-     
-      <Button variant="primary" type="submit" >
+      <Button variant="primary" onClick={handleSubmit}>
       {isLogin ? 'Login' : 'Sign Up'}
       </Button>
+      <button
+            type='button'
+            className='toggle'
+            onClick={switchAuthModeHandler}
+          >
+            {isLogin ? 'Create new account' : 'Login with existing account'}
+       </button>
     </Form>
         </div>
        
