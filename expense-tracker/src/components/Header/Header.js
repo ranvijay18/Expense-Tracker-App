@@ -1,9 +1,12 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function Header() {
+
+  const handleLogout = () => {
+   localStorage.removeItem('token')
+  }
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
       <Container>
@@ -11,11 +14,11 @@ function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#features">Expenses</Nav.Link>
+            <Nav.Link href="/expenses">Expenses</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">Login</Nav.Link>
-            <Nav.Link href="/auth">Logout</Nav.Link>
+            <Nav.Link href="/auth">Login</Nav.Link>
+            <Nav.Link href="/auth" onClick={handleLogout}>Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

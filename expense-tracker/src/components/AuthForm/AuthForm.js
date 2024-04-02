@@ -2,18 +2,21 @@ import { useState } from "react";
 import { useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import './AuthForm.css'
 
 
 
 const AuthForm = () => {
 
     const [isLogin, setIsLogin] = useState(false);
+    const [isForgetPassword, setIsForgetPassword] = useState(false);
     const navigate = useNavigate() 
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
+    const emailForgetPasswordRef = useRef();
 
 
     const switchAuthModeHandler = () => {
@@ -75,7 +78,10 @@ const AuthForm = () => {
         }
       }).then(res => {
         if(res.ok){
-             res.json().then((data) => navigate('/expenses'))
+             res.json().then((data) => {
+              localStorage.setItem('token',data.idToken);
+              navigate('/expenses')
+            })
         }else{
         
           return res.json().then(data => alert(data.error.message))
@@ -90,11 +96,38 @@ const AuthForm = () => {
     }
 
 
+    const forgetPasswordHandler = (e) => {
+
+      e.preventDefault();
+
+         const email = emailForgetPasswordRef.current.value;
+         fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAWnTSSM62-LxPcuSBx2HBV5wVcYcp6138',{
+          method:'POST',
+          body:JSON.stringify({ 
+            requestType:"PASSWORD_RESET",
+            email: email,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(res => {
+          if(res.ok){
+               res.json().then((data) => alert('Reset Paaword Link is sent to your email please check'))
+          }else{
+          
+            return res.json().then(data => alert(data.error.message))
+           
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+    }
+
+
     return(
         <>
+        {!isForgetPassword && 
         <div>
-            
-        </div>
         <div className='d-flex justify-content-center align-items-center'>
         
         <div className='container card m-5' style={{ width: "30rem"}}>
@@ -114,10 +147,7 @@ const AuthForm = () => {
         <Form.Label>Confirm Password</Form.Label>
         <Form.Control type="password" placeholder="Confirm Password" ref={confirmPasswordRef}/>
       </Form.Group> : ''}
-
-      <Button variant="primary" onClick={handleSubmit}>
-      {isLogin ? 'Login' : 'Sign Up'}
-      </Button>
+       <div className='extra-actions'>
       <button
             type='button'
             className='toggle'
@@ -125,12 +155,54 @@ const AuthForm = () => {
           >
             {isLogin ? 'Create new account' : 'Login with existing account'}
        </button>
+       {isLogin &&
+       <button
+            type='button'
+            className='toggle'
+            onClick={() => setIsForgetPassword(true)}
+          >
+            Forget Password
+       </button>}
+       </div>
+      <div className="text-center">
+      <Button variant="primary" onClick={handleSubmit} className="action-btn px-5 mt-1">
+      {isLogin ? 'Login' : 'Sign Up'}
+      </Button>
+      </div>
     </Form>
         </div>
        
         </div>
+        </div>
+        }
+        
+        {isForgetPassword && 
+        <div>
+          <div className='d-flex justify-content-center align-items-center'>
+          <div className='container card m-5' style={{ width: "30rem"}}>
+                <h1 className='text-center m-3'>Forget Password</h1>
+                  <Form className='m-3'>
+                  <Form.Group className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control type="email" placeholder="Enter email" ref={emailForgetPasswordRef}/>
+                  </Form.Group>
+
+          <div className="text-center">
+                      <Button variant="primary" onClick={forgetPasswordHandler} className="action-btn px-5 mt-1">
+                    Send Link
+                </Button>
+           </div>
+              </Form>
+               </div>
+          </div>
+          </div>
+        }
         </>
     )
 }
 
 export default AuthForm;
+
+
+
+
