@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import './ProfileForm.css'
 
 
 const ProfileForm = () => {
@@ -68,10 +69,43 @@ const ProfileForm = () => {
         console.log(err);
       })
     }
+
+    const handleVerify = () => {
+        fetch('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAWnTSSM62-LxPcuSBx2HBV5wVcYcp6138',{
+          method:'POST',
+          body:JSON.stringify({ 
+            requestType:"VERIFY_EMAIL",
+            idToken: localStorage.getItem('token'),
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+         }).then(res => {
+          if(res.ok){
+            alert("Check your mail to verify")
+               res.json().then((data) =>{
+                  console.log(data);
+               })
+          }else{
+            return res.json().then(data => alert(data.error.message))
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+    }
+
+
    return(
     <>
     <h1 className='text-center mt-5'>Complete Your Profile</h1>
     <div className='container mt-5'>
+      <label>Email: </label>
+      <div className='d-flex justify-content-center align-items-center'>
+      <input className="email-input" placeholder="Enter Url" size={130} defaultValue={user.email} required/>
+      <button className='verify-btn' onClick={handleVerify}>Verify Email</button>
+      </div>
+      </div>
+    <div className='container mt-3'>
     <Form onSubmit={handleSubmit}>
        <Row>
       <Col>
