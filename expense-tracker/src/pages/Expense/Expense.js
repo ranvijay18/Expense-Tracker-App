@@ -1,12 +1,14 @@
 import {  useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ExpenseList from "../../components/Expenses/ExpenseList";
 import ExpenseForm from "../../components/Expenses/ExpenseForm";
 
 
-const Expense = () => {
+const Expense = (props) => {
 
   const navigate = useNavigate();
+
+  const [expenseId, setExpenseId] = useState([])
 
   useEffect(() => {
     if(!(!!localStorage.getItem('token'))){
@@ -14,12 +16,14 @@ const Expense = () => {
   }
   },[navigate])
 
-
+const handleEdit = (expense) => {
+ setExpenseId(expense);
+}
 
   return(
     <>
-   <ExpenseForm/>
-  <ExpenseList />
+   <ExpenseForm onEditExpense={expenseId}/>
+  <ExpenseList onEdit={handleEdit} />
     </>
   )
 }
