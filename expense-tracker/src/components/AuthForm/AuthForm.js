@@ -3,11 +3,18 @@ import { useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";
-import './AuthForm.css'
+import './AuthForm.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from "../../store/auth";
 
 
 
 const AuthForm = () => {
+
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const token = useSelector((state) => state.auth.token);
+  console.log(isAuthenticated, token)
 
     const [isLogin, setIsLogin] = useState(false);
     const [isForgetPassword, setIsForgetPassword] = useState(false);
@@ -56,6 +63,7 @@ const AuthForm = () => {
             setIsLogin(true)
              res.json().then((data) =>{
                 localStorage.setItem('token',data.idToken);
+                
              })
         }else{
         
@@ -80,6 +88,7 @@ const AuthForm = () => {
         if(res.ok){
              res.json().then((data) => {
               localStorage.setItem('token',data.idToken);
+              dispatch(authActions.login(data.idToken))
               navigate('/expenses')
             })
         }else{

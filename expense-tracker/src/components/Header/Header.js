@@ -1,8 +1,12 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import {useSelector } from 'react-redux';
+
 
 function Header() {
+
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   const handleLogout = () => {
    localStorage.removeItem('token')
@@ -17,8 +21,8 @@ function Header() {
             <Nav.Link href="/expenses">Expenses</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="/auth">Login</Nav.Link>
-            <Nav.Link href="/auth" onClick={handleLogout}>Logout</Nav.Link>
+            {isAuthenticated ? <Nav.Link href="/auth" onClick={handleLogout}>Logout</Nav.Link> :  
+            <Nav.Link href="/auth">Login</Nav.Link>}
           </Nav>
         </Navbar.Collapse>
       </Container>
